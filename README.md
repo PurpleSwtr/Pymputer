@@ -54,7 +54,8 @@ computer.command("0010 0100 0010 0101")
 computer.command("w = 7 + 9")
 ```
 
-Визуальное представление:
+## Визуальное представление:
+
 <img width="642" height="992" alt="Image" src="https://github.com/user-attachments/assets/495a6fa1-918c-4fbd-97a9-962f4520f10e" />
 
 ---
