@@ -20,12 +20,12 @@
 
 ### Установка
 
-    ```bash
-    git clone https://github.com/PurpleSwtr/Pymputer.git
-    ```
-    ```bash
-    cd Pymputer
-    ```
+```bash
+git clone https://github.com/PurpleSwtr/Pymputer.git
+```
+```bash
+cd Pymputer
+```
 
 ### Запуск
 
