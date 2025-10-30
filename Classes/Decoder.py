@@ -5,9 +5,10 @@
 "w = R1 + R2" -> func -> "0010 0001 0010 0011"
 """
 from utils.instructions import BYTE
-
+from Classes.config import config
 class Decoder():
     def __init__(self):
+        self.register_size = config.registers_size
         self.commands = {
         '+': '0010',
         # 'R1': '0001',
@@ -38,9 +39,9 @@ class Decoder():
         return final_output
     
     def decode(self, command:str) -> list[str]:
-        final_output = None
+        final_output_str = ""
         if not set(command) - {'0', '1', ' '}:
-            final_output = command
+            final_output_str = command 
         else: 
             #FIXME: .split()
             commands_list = []
@@ -58,15 +59,22 @@ class Decoder():
             output_str = ""
             for char in commands_list:
                 output_str += f'{self.commands[char]} '
-            final_output = output_str
-        return self.to_chunks(final_output)
-    
+            final_output_str = output_str
+
+        raw_chunks = final_output_str.strip().split(' ')
+        padded_chunks = []
+        for chunk in raw_chunks:
+            if chunk:
+                padded_chunk = chunk.zfill(self.register_size)
+                padded_chunks.append(padded_chunk)
+        return padded_chunks
+
     def get_command_repr(self, command: list) -> str:
-        for i, char in enumerate(command):
-            command[i] = str(char)
-        command = "".join(command)
+        command_str = "".join(map(str, command))
+        opcode = command_str[-4:]
         for key, variable in self.commands.items():
-            if variable == command:
+            if variable == opcode:
                 return key
+        return "?"
 
 

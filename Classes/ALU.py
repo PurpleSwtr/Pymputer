@@ -1,4 +1,5 @@
 from typing import Callable
+from Classes.config import config
 from utils.formated import center_text_fill
 from utils.check import check
 from utils.instructions import TO_DEC, list_to_tuple, tuple_to_int
@@ -25,6 +26,10 @@ class ALU():
         self.counter: int = 0
         self.instruction: Callable
         self.arguments: tuple
+
+        self.register_size = config.registers_size
+        self.register_cnt = config.registers_cnt
+        
 
         self.access_instuctions: dict = {
             '0010': self.ADD_4
@@ -83,20 +88,18 @@ class ALU():
         return (output_carry, output_sum)
     
     @check(num_inputs=8, output_labels=('CARRY', 'S3', 'S2', 'S1', 'S0'))
-    def ADD_4(self, *args: int) -> tuple:
-        if len(args) != 8:
-            raise ValueError("функция ожидает 8 бит")
+    def ADD_4(self, a_bits: tuple, b_bits: tuple) -> tuple:
+        if len(a_bits) != self.register_size or len(b_bits) != self.register_size:
+            raise ValueError(f"Операнды должны быть {self.register_size}-битными")
             
-        a_bits_msb = args[0:4]  # Первые 4 бита
-        b_bits_msb = args[4:8]  # Следующие 4 бита
 
-        a_bits_lsb = list(reversed(a_bits_msb))
-        b_bits_lsb = list(reversed(b_bits_msb))
+        a_bits_lsb = list(reversed(a_bits))
+        b_bits_lsb = list(reversed(b_bits))
 
         carry_in = 0 
         result_sum_bits_lsb = [] 
         
-        for i in range(4):
+        for i in range(self.register_size):
             carry_out, sum_bit = self.FULL_ADDER(a_bits_lsb[i], b_bits_lsb[i], carry_in)
             result_sum_bits_lsb.append(sum_bit)
             carry_in = carry_out
@@ -116,9 +119,9 @@ class ALU():
 
     @check()
     def LOAD_INSTRUCTION(self, instruction: list) -> None:
-        # inspect.stack()
-        instruction = tuple(instruction)
-        self.instruction = self.access_instuctions[str(tuple_to_int(instruction))]
+        full_instruction_str = "".join(map(str, instruction))
+        opcode = full_instruction_str[-4:]
+        self.instruction = self.access_instuctions[opcode]
     
     @check()
     def LOAD_ARGUMENTS(self, arguments: list) -> None:
@@ -126,10 +129,11 @@ class ALU():
     
     # FIXME: Он единственный возвращает кортеж в компьютер, нехорошо...
     @check()
-    def RUN(self,) -> tuple:
-        # FIXME: Возможно это станет большой блять проблемой...
-        arguments = self.arguments
-        return self.instruction(*arguments)
+    def RUN(self) -> tuple:
+        a_bits = self.arguments[0:self.register_size]
+        b_bits = self.arguments[self.register_size : self.register_size * 2]
+
+        return self.instruction(a_bits, b_bits)
     
     @check()
     def command_print(self, instruction: str, arguments: list, result: tuple) -> None:
@@ -150,5 +154,22 @@ class ALU():
                       num_2=num_2_integer, 
                       res=result_integer)
 
+# Альтернативные варианты которые ломали мою концепцию, 
+# и использовали слишком высокий уровень абстракции: 
+
+# def AND(a, b):
+#     return 1 if a == 1 and b == 1 else 0
+
+# def OR(a, b):
+#     return 1 if a == 1 or b == 1 else 0
+
+# def NOT(a):
+#     return 1 if a == 0 else 0
+
+# def XOR(a, b):
+#     return 1 if a != b else 0
+
+# def NAND(a, b):
+#     return NOT(AND(a, b))
 
 

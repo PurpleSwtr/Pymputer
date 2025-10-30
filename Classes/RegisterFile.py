@@ -1,12 +1,17 @@
 from utils.instructions import BYTE
 from utils.formated import center_text_fill
 
+from Classes.config import config
+
 class RegisterFile():
-    def __init__(self, size: int = 4, registers_cnt: int = 4, pc: int = 0):
-        self.size = size
+    def __init__(self, 
+                 registers_cnt: int = config.registers_cnt, 
+                 registers_size: int = config.registers_size, 
+                 pc: int = 0):
+        self.size = registers_size
         self.registers_cnt = registers_cnt
 
-        self.registers = [[0]*size for _ in range(registers_cnt)]
+        self.registers = [[0]*registers_size for _ in range(registers_cnt)]
         self.pc = pc
     
     def _format_register_data(self, register_data: list[int]) -> str:
@@ -40,6 +45,5 @@ class RegisterFile():
         return [self.registers[i] for i in range(1,self.registers_cnt - 1)]
     
     def write(self, data: tuple) -> None:
-        data = list(data)
-        data.remove(0)
-        self.registers[len(self.registers) - 1] = data
+        result_bits = list(data)[1:]
+        self.registers[len(self.registers) - 1] = result_bits

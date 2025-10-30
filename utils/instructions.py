@@ -22,21 +22,3 @@ def list_to_tuple(ls: list) -> tuple:
 
 def tuple_to_int(tup: tuple) -> int:
     return "".join(map(str, tup))
-
-# Альтернативные варианты которые ломали мою концепцию, 
-# и использовали слишком высокий уровень абстракции: 
-
-# def AND(a, b):
-#     return 1 if a == 1 and b == 1 else 0
-
-# def OR(a, b):
-#     return 1 if a == 1 or b == 1 else 0
-
-# def NOT(a):
-#     return 1 if a == 0 else 0
-
-# def XOR(a, b):
-#     return 1 if a != b else 0
-
-# def NAND(a, b):
-#     return NOT(AND(a, b))
