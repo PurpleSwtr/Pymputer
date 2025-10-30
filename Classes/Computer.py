@@ -1,3 +1,4 @@
+from pydantic import BaseModel
 from Classes.RegisterFile import RegisterFile
 from Classes.ProgrammCounter import PC
 from Classes.Decoder import Decoder
