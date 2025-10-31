@@ -2,6 +2,9 @@ import time
 from Classes.ASCII import ASCIManager
 from Classes.Computer import Computer
 
+# TODO: реализовать взаимодействие например через консоль пока что, а всё логику вынести в отдельный файл.
+# Чтобы можно было в реальном времени что0то отправлять в регистры
+
 # Экземпляр основного класса ассемблера
 computer = Computer()
 
@@ -18,7 +21,7 @@ computer.command("0010 0100 0010 0101")
 computer.command("0010 1110 0010 0101")
 
 # Пример выполнения ассемблерной команды. 
-computer.command("w = 7 + 9")
+computer.command("w = 12 + 12")
 
 # Первый прототип эмулятора декодера ASCI символов 
 
